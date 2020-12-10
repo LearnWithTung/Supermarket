@@ -31,15 +31,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var emptyLabel: UILabel!
     
     var itemArray: [Item] = [
-        Item(image: #imageLiteral(resourceName: "apple-1 1"), price: 35000, name: "Apple", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "broccoli 1"), price: 15000, name: "Broccoli", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "banana 1"), price: 15000, name: "Banana", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "bread 1"), price: 12000, name: "Bread", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "aubergine 1"), price: 17000, name: "Aubergine", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "blueberries 1"), price: 65000, name: "Bluberries", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "cabbage 1"), price: 10000, name: "Cabbage", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "beans 1"), price: 10000, name: "Beans", itemCount: nil),
-        Item(image: #imageLiteral(resourceName: "biscuit 1"), price: 21000, name: "Biscuit", itemCount: nil)
+        Item(image: #imageLiteral(resourceName: "apple-1 1"), price: 35000, name: "Apple", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "broccoli 1"), price: 15000, name: "Broccoli", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "banana 1"), price: 15000, name: "Banana", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "bread 1"), price: 12000, name: "Bread", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "aubergine 1"), price: 17000, name: "Aubergine", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "blueberries 1"), price: 65000, name: "Bluberries", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "cabbage 1"), price: 10000, name: "Cabbage", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "beans 1"), price: 10000, name: "Beans", itemCount: 1),
+        Item(image: #imageLiteral(resourceName: "biscuit 1"), price: 21000, name: "Biscuit", itemCount: 1)
     ]
     
     let imageItemArray: [UIImage] = [#imageLiteral(resourceName: "cabbage 1"), #imageLiteral(resourceName: "banana 1"), #imageLiteral(resourceName: "apple-1 1"), #imageLiteral(resourceName: "aubergine 1"), #imageLiteral(resourceName: "bread 1"), #imageLiteral(resourceName: "biscuit 1"), #imageLiteral(resourceName: "blueberries 1"), #imageLiteral(resourceName: "beans 1"), #imageLiteral(resourceName: "broccoli 1")]
@@ -160,6 +160,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let end = money.index(money.endIndex, offsetBy: -3)
         let result = money[..<end]
         cell.priceItemLabel.text = "\(result)/kg"
+        cell.countItemLabel.text = "\(self.itemPurchase[indexPath.row].itemCount!)"
 //        cell.priceItemLabel.text = "\(vndFormatCurrency(self.itemPurchase[indexPath.row].price)) /kg"
 //        String(self.itemPurchase[indexPath.row].price)
 //        cell.countItemLabel.text = "1"
@@ -171,6 +172,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
+    {
+        if editingStyle == .delete
+        {
+            self.itemPurchase.remove(at: indexPath.row)
+            
+            itemTableView.reloadData()
+        }
     }
     
 }

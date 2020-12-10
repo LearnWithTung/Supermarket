@@ -27,7 +27,7 @@ class ItemTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.imgItem.layer.cornerRadius = 9
         self.imgItem.backgroundColor = #colorLiteral(red: 0.8745098039, green: 0.8745098039, blue: 0.8745098039, alpha: 1)
-        self.countItemLabel.text = "1"
+        self.countItemLabel.text = "\(countItem)"
         
         // Initialization code
     }
