@@ -67,11 +67,11 @@
 				CEE123EF257FCD6E00A669F6 /* Cell */,
 				BD1E1CEB257F8133004A4FBF /* AppDelegate.swift */,
 				BD1E1CED257F8133004A4FBF /* SceneDelegate.swift */,
+				CEE123F5257FCEAE00A669F6 /* HomeViewController.swift */,
 				BD1E1CF4257F8133004A4FBF /* Assets.xcassets */,
 				BD1E1CF6257F8133004A4FBF /* LaunchScreen.storyboard */,
 				BD1E1CF9257F8133004A4FBF /* Info.plist */,
 				CEE123EC257FC70A00A669F6 /* Main.storyboard */,
-				CEE123F5257FCEAE00A669F6 /* HomeViewController.swift */,
 			);
 			path = Supermarket;
 			sourceTree = "<group>";

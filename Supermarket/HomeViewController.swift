@@ -23,6 +23,7 @@ class Food {
 class HomeViewController: UIViewController {
 
     @IBOutlet weak var table: UITableView!
+    @IBOutlet weak var emptyLabel: UILabel!
     @IBOutlet weak var menuCollectionView: UICollectionView!
     @IBOutlet weak var payoutButton: UIButton!
     @IBOutlet weak var result: UILabel!
@@ -54,17 +55,43 @@ class HomeViewController: UIViewController {
     }
     @IBAction func handelClearBarButton(_ sender: UIBarButtonItem) {
         itemChoosed.removeAll()
-        total = 0
-        result.text = String(total)
+        self.emptyLabel.isHidden = false
+        updateTotal()
         table.reloadData()
     }
-
     func updateTotal(){
         total = 0
         for item in itemChoosed {
             total += item.price * item.count
         }
-        result.text = "\(total) VND"
+        result.text = vndFormatCurrency(total)
+        //result.text = "\(total) VND"
+    }
+    func check(){
+        for item in itemChoosed{
+            if item.count <= 0 {
+                itemChoosed = itemChoosed.filter(){$0.name != item.name}
+            }
+        }
+        table.reloadData()
+    }
+    func checkName(newname : String) -> Bool{
+        for item in itemChoosed {
+            if item.name == newname {
+                return true
+            }
+        }
+        return false
+    }
+    func vndFormatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.currencyGroupingSeparator = "."
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.currencySymbol = "VND"
+        currencyFormatter.positiveFormat = "#,##0 ¤"
+        let priceString = currencyFormatter.string(from: NSNumber(value: inputNumber))!
+        return priceString
     }
 }
 
@@ -88,7 +115,13 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        itemChoosed.append(Food(image: foods[indexPath.item].image, name: foods[indexPath.item].name, price: foods[indexPath.item].price, count: foods[indexPath.item].count))
+        if checkName(newname: foods[indexPath.item].name) {
+            itemChoosed.first(where: {$0.name == itemChoosed[indexPath.item].name })?.count = itemChoosed[indexPath.item].count + 1
+        }
+        else {
+            itemChoosed.append(Food(image: foods[indexPath.item].image, name: foods[indexPath.item].name, price: foods[indexPath.item].price, count: foods[indexPath.item].count))
+        }
+        self.emptyLabel.isHidden = true
         updateTotal()
         table.reloadData()
     }
@@ -121,13 +154,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configure(food: itemChoosed[indexPath.section])
         return cell
     }
-
 }
 
 extension HomeViewController: detailTableViewCellDelegate {
     func pass(name: String, data: Int) {
         self.itemChoosed.first(where: {$0.name == name})?.count = data
+        print(itemChoosed)
         updateTotal()
+        check()
     }
     
 }

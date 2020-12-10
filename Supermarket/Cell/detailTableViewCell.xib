@@ -64,9 +64,9 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35.000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVM-XV-rwn" userLabel="Price">
-                        <rect key="frame" x="123" y="40" width="60" height="22"/>
+                        <rect key="frame" x="123" y="40" width="90" height="22"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="60" id="FKu-xa-7DL"/>
+                            <constraint firstAttribute="width" constant="90" id="FKu-xa-7DL"/>
                             <constraint firstAttribute="height" constant="22" id="eMk-gb-8oP"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -74,7 +74,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/ kg" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIX-RH-xqz">
-                        <rect key="frame" x="193" y="40" width="25" height="20"/>
+                        <rect key="frame" x="218" y="40" width="25" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="a83-rV-8qw"/>
                         </constraints>
@@ -84,7 +84,7 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="qIX-RH-xqz" firstAttribute="leading" secondItem="pVM-XV-rwn" secondAttribute="trailing" constant="10" id="0Hh-ti-mgc"/>
+                    <constraint firstItem="qIX-RH-xqz" firstAttribute="leading" secondItem="pVM-XV-rwn" secondAttribute="trailing" constant="5" id="0Hh-ti-mgc"/>
                     <constraint firstItem="hyF-Cj-XTr" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Eqq-Hy-G5m"/>
                     <constraint firstItem="pVM-XV-rwn" firstAttribute="top" secondItem="jLg-Si-dqY" secondAttribute="bottom" constant="3" id="L4M-wd-j95"/>
                     <constraint firstItem="hyF-Cj-XTr" firstAttribute="height" secondItem="H2p-sc-9uM" secondAttribute="height" multiplier="1/3" id="dqX-1R-l1A"/>

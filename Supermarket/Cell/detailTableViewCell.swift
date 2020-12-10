@@ -43,9 +43,21 @@ class detailTableViewCell: UITableViewCell {
     public func configure(food: Food) {
         img.image = UIImage(named: food.image)
         name.text = food.name
-        price.text = String(food.price)
+        price.text = vndFormatCurrency(food.price, symbol: "")
+        //price.text = String(food.price)
+        number.text = String(food.count)
     }
-    
+    func vndFormatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.currencyGroupingSeparator = "."
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.currencySymbol = "VND"
+        currencyFormatter.positiveFormat = "#,##0 ¤"
+        let priceString = currencyFormatter.string(from: NSNumber(value: inputNumber))!
+        return priceString
+    }
+
     @IBAction func handelMinusButton(_ sender: UIButton) {
         if let a = number.text, let b = name.text {
             x = Int(a) ?? 0
