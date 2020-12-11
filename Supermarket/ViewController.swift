@@ -24,9 +24,7 @@ class ViewController: UIViewController {
     
     
     @IBOutlet weak var itemCollectionView: UICollectionView!
-    
     @IBOutlet weak var itemTableView: UITableView!
-    
     @IBOutlet weak var totalPriceLabel: UILabel!
     @IBOutlet weak var emptyLabel: UILabel!
     
@@ -42,12 +40,9 @@ class ViewController: UIViewController {
         Item(image: #imageLiteral(resourceName: "biscuit 1"), price: 21000, name: "Biscuit", itemCount: 1)
     ]
     
-    let imageItemArray: [UIImage] = [#imageLiteral(resourceName: "cabbage 1"), #imageLiteral(resourceName: "banana 1"), #imageLiteral(resourceName: "apple-1 1"), #imageLiteral(resourceName: "aubergine 1"), #imageLiteral(resourceName: "bread 1"), #imageLiteral(resourceName: "biscuit 1"), #imageLiteral(resourceName: "blueberries 1"), #imageLiteral(resourceName: "beans 1"), #imageLiteral(resourceName: "broccoli 1")]
     var itemPurchase: [Item] = []
 
     var idxCollectionViewCell: [Int] = []
-    
-    var totalPrice: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +65,7 @@ class ViewController: UIViewController {
     }
     
     func updateTotalPrice() {
-        totalPrice = 0
+        var totalPrice = 0
         for item in itemPurchase {
             if let itemCount = item.itemCount {
                 totalPrice = totalPrice + item.price * itemCount
@@ -80,7 +75,7 @@ class ViewController: UIViewController {
             }
             
         }
-        self.totalPriceLabel.text = vndFormatCurrency(totalPrice)
+        self.totalPriceLabel.text = formatCurrency(totalPrice)
     }
     
 
@@ -94,12 +89,12 @@ class ViewController: UIViewController {
         updateTotalPrice()
     }
     
-    func vndFormatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
+    func formatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.currencyGroupingSeparator = "."
         currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencySymbol = "VND"
+        currencyFormatter.currencySymbol = symbol
         currencyFormatter.positiveFormat = "#,##0 ¤"
         let priceString = currencyFormatter.string(from: NSNumber(value: inputNumber))!
         return priceString
@@ -114,17 +109,23 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        print(indexPath.item)
         self.emptyLabel.isHidden = true
         self.itemTableView.isHidden = false
+        addItem(indexPath)
+        updateTotalPrice()
+    }
+    
+    private func addItem(_ indexPath: IndexPath) {
         if !self.idxCollectionViewCell.contains(indexPath.item) {
             self.idxCollectionViewCell.append(indexPath.item)
             self.itemPurchase.append(itemArray[indexPath.item])
             self.itemTableView.reloadData()
-//            updateTotalPrice()
-//            print(self.idxCollectionViewCell)
+            //            updateTotalPrice()
+            //            print(self.idxCollectionViewCell)
         } else {
             if let idx = self.idxCollectionViewCell.firstIndex(of: indexPath.item){
                 let indexPath = IndexPath(row: idx, section: 0)
@@ -135,9 +136,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
                 self.itemTableView.reloadData()
             }
         }
-        updateTotalPrice()
-
-
     }
     
 }
@@ -167,7 +165,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.delegate = self
         cell.imgItem.image = self.itemPurchase[indexPath.row].image
         cell.nameItemLabel.text = self.itemPurchase[indexPath.row].name
-        let money = vndFormatCurrency(self.itemPurchase[indexPath.row].price)
+        let money = formatCurrency(self.itemPurchase[indexPath.row].price)
         let end = money.index(money.endIndex, offsetBy: -3)
         let result = money[..<end]
         cell.priceItemLabel.text = "\(result)/kg"
@@ -186,25 +184,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return 80
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
-    {
-        if editingStyle == .delete
-        {
-            self.itemPurchase.remove(at: indexPath.row)
-            print(self.itemPurchase.count)
-            self.idxCollectionViewCell.remove(at: indexPath.row)
-            
-            
-        }
-        itemTableView.reloadData()
-        updateTotalPrice()
-    }
-    
-    
 }
 
 extension ViewController: ItemCountDelegate {
-    func getItemCount(count: Int, name: String) {
+    func setItemCount(to count: Int, name: String) {
         if count == 0 {
             let idx = self.itemPurchase.firstIndex{$0.name == name}!
             self.idxCollectionViewCell.remove(at: idx)

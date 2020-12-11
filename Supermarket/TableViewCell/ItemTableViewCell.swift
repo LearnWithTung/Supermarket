@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ItemCountDelegate {
-    func getItemCount(count: Int, name: String)
+    func setItemCount(to count: Int, name: String)
 }
 
 class ItemTableViewCell: UITableViewCell {
@@ -49,22 +49,15 @@ class ItemTableViewCell: UITableViewCell {
     @IBAction func addItemPressed(_ sender: Any) {
         countItem = countItem + 1
         self.countItemLabel.text = "\(countItem)"
-        delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
-//        let indexP = NSIndexPath(item: countItemLabel.tag, section: 0)
-//        print(indexP)
-
+        delegate.setItemCount(to: countItem, name: nameItemLabel.text!)
     }
     
     @IBAction func rmvItemPressed(_ sender: Any) {
         if countItem > 0 {
             countItem = countItem - 1
             self.countItemLabel.text = "\(countItem)"
-            delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
+            delegate.setItemCount(to: countItem, name: nameItemLabel.text!)
         }
-
-    
-
-
     }
     
     
