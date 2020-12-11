@@ -65,7 +65,6 @@ class HomeViewController: UIViewController {
             total += item.price * item.count
         }
         result.text = vndFormatCurrency(total)
-        //result.text = "\(total) VND"
     }
     func check(){
         for item in itemChoosed{
@@ -116,7 +115,7 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if checkName(newname: foods[indexPath.item].name) {
-            itemChoosed.first(where: {$0.name == itemChoosed[indexPath.item].name })?.count = itemChoosed[indexPath.item].count + 1
+            itemChoosed.first(where: {$0.name == foods[indexPath.item].name })?.count += 1 //itemChoosed[indexPath.item].count + 1
         }
         else {
             itemChoosed.append(Food(image: foods[indexPath.item].image, name: foods[indexPath.item].name, price: foods[indexPath.item].price, count: foods[indexPath.item].count))
@@ -159,7 +158,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 extension HomeViewController: detailTableViewCellDelegate {
     func pass(name: String, data: Int) {
         self.itemChoosed.first(where: {$0.name == name})?.count = data
-        print(itemChoosed)
         updateTotal()
         check()
     }

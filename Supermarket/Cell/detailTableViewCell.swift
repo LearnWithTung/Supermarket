@@ -24,6 +24,7 @@ class detailTableViewCell: UITableViewCell {
         minus.layer.cornerRadius = 3
         plus.layer.borderWidth = 1
         plus.layer.cornerRadius = 3
+        plus.backgroundColor = .green
         number.text = "1"
         plus.layer.borderColor = UIColor.green.cgColor
         minus.layer.borderColor = UIColor.green.cgColor
@@ -43,8 +44,7 @@ class detailTableViewCell: UITableViewCell {
     public func configure(food: Food) {
         img.image = UIImage(named: food.image)
         name.text = food.name
-        price.text = vndFormatCurrency(food.price, symbol: "")
-        //price.text = String(food.price)
+        price.text = vndFormatCurrency(food.price)
         number.text = String(food.count)
     }
     func vndFormatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
@@ -52,7 +52,7 @@ class detailTableViewCell: UITableViewCell {
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.currencyGroupingSeparator = "."
         currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencySymbol = "VND"
+        currencyFormatter.currencySymbol = ""
         currencyFormatter.positiveFormat = "#,##0 ¤"
         let priceString = currencyFormatter.string(from: NSNumber(value: inputNumber))!
         return priceString

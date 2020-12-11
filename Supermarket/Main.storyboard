@@ -44,9 +44,9 @@
                                 <rect key="frame" x="0.0" y="746.5" width="414" height="149.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqG-nh-6Xk">
-                                        <rect key="frame" x="258" y="37.5" width="138" height="74.5"/>
+                                        <rect key="frame" x="258" y="45" width="138" height="59.5"/>
                                         <color key="backgroundColor" systemColor="systemGreenColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <state key="normal" title="PAYOUT">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -73,7 +73,7 @@
                                     <constraint firstItem="hqd-ZW-7FV" firstAttribute="centerY" secondItem="Kjq-o3-Ieu" secondAttribute="centerY" id="4OD-Cx-h4L"/>
                                     <constraint firstItem="lqG-nh-6Xk" firstAttribute="width" secondItem="Kjq-o3-Ieu" secondAttribute="width" multiplier="1/3" id="Gb7-Rr-UUx"/>
                                     <constraint firstAttribute="trailing" secondItem="lqG-nh-6Xk" secondAttribute="trailing" constant="18" id="JOD-ic-uIv"/>
-                                    <constraint firstItem="lqG-nh-6Xk" firstAttribute="height" secondItem="Kjq-o3-Ieu" secondAttribute="height" multiplier="1/2" id="Zij-7h-ceU"/>
+                                    <constraint firstItem="lqG-nh-6Xk" firstAttribute="height" secondItem="Kjq-o3-Ieu" secondAttribute="height" multiplier="4/10" id="Zij-7h-ceU"/>
                                     <constraint firstItem="lqG-nh-6Xk" firstAttribute="leading" secondItem="hqd-ZW-7FV" secondAttribute="trailing" id="a1K-lh-a7E"/>
                                     <constraint firstItem="hqd-ZW-7FV" firstAttribute="leading" secondItem="Kjq-o3-Ieu" secondAttribute="leading" constant="18" id="h8h-TC-L1T"/>
                                     <constraint firstItem="ajw-JQ-hON" firstAttribute="leading" secondItem="Kjq-o3-Ieu" secondAttribute="leading" constant="18" id="hqG-5Z-W1v"/>
