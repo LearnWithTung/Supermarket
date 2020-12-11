@@ -16,7 +16,7 @@ class detailTableViewCell: UITableViewCell {
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var name: UILabel!
     var x: Int = 1
-    var delegate: detailTableViewCellDelegate?
+    var delegate: DetailTableViewCellDelegate?
     override func awakeFromNib() {
         super.awakeFromNib()
         img.layer.cornerRadius = 9
@@ -41,12 +41,16 @@ class detailTableViewCell: UITableViewCell {
         return UINib(nibName: "detailTableViewCell", bundle: nil)
     }
     
-    public func configure(food: Food) {
-        img.image = UIImage(named: food.image)
-        name.text = food.name
-        price.text = vndFormatCurrency(food.price)
-        number.text = String(food.count)
+    var foodItem: FoodItem!
+    
+    public func configure(foodItem: FoodItem) {
+        img.image = UIImage(named: foodItem.food.image)
+        name.text = foodItem.food.name
+        price.text = vndFormatCurrency(foodItem.food.price)
+        number.text = String(foodItem.count)
+        self.foodItem = foodItem
     }
+    
     func vndFormatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
@@ -59,25 +63,16 @@ class detailTableViewCell: UITableViewCell {
     }
 
     @IBAction func handelMinusButton(_ sender: UIButton) {
-        if let a = number.text, let b = name.text {
-            x = Int(a) ?? 0
-            x -= 1
-            number.text = String(x)
-            delegate?.pass(name:b ,data: x)
-        }
+        delegate?.decreaseItem(foodItem)
         
     }
     
     @IBAction func handelPlusButton(_ sender: UIButton) {
-        if let a = number.text, let b = name.text {
-            x = Int(a) ?? 0
-            x += 1
-            number.text = String(x)
-            delegate?.pass(name:b ,data: x)
-        }
+        delegate?.increaseItem(foodItem)
     }
 }
 
-protocol detailTableViewCellDelegate {
-    func pass(name:String, data: Int)
+protocol DetailTableViewCellDelegate {
+    func increaseItem(_ foodItem: FoodItem)
+    func decreaseItem(_ foodItem: FoodItem)
 }

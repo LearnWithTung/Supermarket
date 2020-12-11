@@ -7,16 +7,18 @@
 
 import UIKit
 
-class Food {
+struct Food {
     let image: String
     let name: String
     let price: Int
-    var count: Int
-    init(image: String, name: String, price: Int, count: Int) {
-        self.image = image
-        self.name = name
-        self.price = price
-        self.count = count
+}
+
+class FoodItem {
+    let food: Food
+    var count: Int = 1
+    
+    init(food: Food) {
+        self.food = food
     }
 }
 
@@ -30,19 +32,11 @@ class HomeViewController: UIViewController {
     
     var foods = [Food]()
     var total = 0
-    var itemChoosed = [Food]()
+    var itemChose = [FoodItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        foods.append(Food(image: "apple", name: "Apple", price: 35000,count:1))
-        foods.append(Food(image: "aubergine", name: "Aubergine", price: 17000,count:1))
-        foods.append(Food(image: "banana", name: "Banana", price: 15000,count:1))
-        foods.append(Food(image: "beans", name: "Beans", price: 10000,count:1))
-        foods.append(Food(image: "blueberries", name: "Blueberries", price: 65000,count:1))
-        foods.append(Food(image: "bread", name: "Bread", price: 12000,count:1))
-        foods.append(Food(image: "biscuit", name: "Biscuit", price: 21000,count:1))
-        foods.append(Food(image: "broccoli", name: "Broccoli", price: 15000,count:1))
-        foods.append(Food(image: "cabbage", name: "Cabbage", price: 10000,count:1))
+        dummyData()
         menuCollectionView.register(menuCollectionViewCell.nib(), forCellWithReuseIdentifier: "menuCollectionViewCell")
         table.register(detailTableViewCell.nib(), forCellReuseIdentifier: "cell")
         menuCollectionView.delegate = self
@@ -53,30 +47,36 @@ class HomeViewController: UIViewController {
         payoutButton.layer.cornerRadius = 9
         
     }
+    
+    fileprivate func dummyData() {
+        foods.append(Food(image: "apple", name: "Apple", price: 35000))
+        foods.append(Food(image: "aubergine", name: "Aubergine", price: 17000))
+        foods.append(Food(image: "banana", name: "Banana", price: 15000))
+        foods.append(Food(image: "beans", name: "Beans", price: 10000))
+        foods.append(Food(image: "blueberries", name: "Blueberries", price: 65000))
+        foods.append(Food(image: "bread", name: "Bread", price: 12000))
+        foods.append(Food(image: "biscuit", name: "Biscuit", price: 21000))
+        foods.append(Food(image: "broccoli", name: "Broccoli", price: 15000))
+        foods.append(Food(image: "cabbage", name: "Cabbage", price: 10000))
+    }
+    
     @IBAction func handelClearBarButton(_ sender: UIBarButtonItem) {
-        itemChoosed.removeAll()
+        itemChose.removeAll()
         self.emptyLabel.isHidden = false
         updateTotal()
         table.reloadData()
     }
     func updateTotal(){
         total = 0
-        for item in itemChoosed {
-            total += item.price * item.count
+        for item in itemChose {
+            total += item.food.price * item.count
         }
         result.text = vndFormatCurrency(total)
     }
-    func check(){
-        for item in itemChoosed{
-            if item.count <= 0 {
-                itemChoosed = itemChoosed.filter(){$0.name != item.name}
-            }
-        }
-        table.reloadData()
-    }
+    
     func checkName(newname : String) -> Bool{
-        for item in itemChoosed {
-            if item.name == newname {
+        for item in itemChose {
+            if item.food.name == newname {
                 return true
             }
         }
@@ -114,15 +114,20 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if checkName(newname: foods[indexPath.item].name) {
-            itemChoosed.first(where: {$0.name == foods[indexPath.item].name })?.count += 1 //itemChoosed[indexPath.item].count + 1
-        }
-        else {
-            itemChoosed.append(Food(image: foods[indexPath.item].image, name: foods[indexPath.item].name, price: foods[indexPath.item].price, count: foods[indexPath.item].count))
-        }
+        let selectedFood = foods[indexPath.item]
+        addItem(selectedFood)
         self.emptyLabel.isHidden = true
         updateTotal()
         table.reloadData()
+    }
+    
+    private func addItem(_ food: Food) {
+        if checkName(newname: food.name) {
+            itemChose.first(where: {$0.food.name == food.name })?.count += 1 //itemChoosed[indexPath.item].count + 1
+        }
+        else {
+            itemChose.append(FoodItem(food: food))
+        }
     }
 }
 
@@ -131,7 +136,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return 1
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return itemChoosed.count
+        return itemChose.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
@@ -150,16 +155,29 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = table.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! detailTableViewCell
         cell.delegate = self
-        cell.configure(food: itemChoosed[indexPath.section])
+        cell.configure(foodItem: itemChose[indexPath.section])
         return cell
     }
 }
 
-extension HomeViewController: detailTableViewCellDelegate {
-    func pass(name: String, data: Int) {
-        self.itemChoosed.first(where: {$0.name == name})?.count = data
-        updateTotal()
-        check()
+extension HomeViewController: DetailTableViewCellDelegate {
+    func increaseItem(_ foodItem: FoodItem) {
+        foodItem.count += 1
+        updateListFoodItem()
     }
     
+    func decreaseItem(_ foodItem: FoodItem) {
+        foodItem.count -= 1
+        updateListFoodItem()
+    }
+    
+    private func updateListFoodItem() {
+        for item in itemChose{
+            if item.count <= 0 {
+                itemChose = itemChose.filter(){$0.food.name != item.food.name}
+            }
+        }
+        table.reloadData()
+        updateTotal()
+    }
 }
