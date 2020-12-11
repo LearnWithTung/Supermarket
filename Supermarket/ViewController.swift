@@ -61,7 +61,6 @@ class ViewController: UIViewController {
         itemCollectionView.delegate = self
         itemCollectionView.dataSource = self
         if itemPurchase.count == 0 {
-            print("hidden empty")
             self.itemTableView.isHidden = true
             self.emptyLabel.isHidden = false
         }
@@ -81,7 +80,7 @@ class ViewController: UIViewController {
             }
             
         }
-        self.totalPriceLabel.text = vndFormatCurrency(totalPrice)//"\(totalPrice) VND"
+        self.totalPriceLabel.text = vndFormatCurrency(totalPrice)
     }
     
 
@@ -124,8 +123,20 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
             self.idxCollectionViewCell.append(indexPath.item)
             self.itemPurchase.append(itemArray[indexPath.item])
             self.itemTableView.reloadData()
-            updateTotalPrice()
+//            updateTotalPrice()
+//            print(self.idxCollectionViewCell)
+        } else {
+            if let idx = self.idxCollectionViewCell.firstIndex(of: indexPath.item){
+                let indexPath = IndexPath(row: idx, section: 0)
+                let cell = itemTableView.cellForRow(at: indexPath) as! ItemTableViewCell
+                self.itemPurchase[idx].itemCount! += 1
+                cell.countItem = self.itemPurchase[idx].itemCount!
+                cell.countItemLabel.text = "\(self.itemPurchase[idx].itemCount!)"
+                self.itemTableView.reloadData()
+            }
         }
+        updateTotalPrice()
+
 
     }
     
@@ -161,6 +172,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let result = money[..<end]
         cell.priceItemLabel.text = "\(result)/kg"
         cell.countItemLabel.text = "\(self.itemPurchase[indexPath.row].itemCount!)"
+        cell.countItem = self.itemPurchase[indexPath.row].itemCount!
 //        cell.priceItemLabel.text = "\(vndFormatCurrency(self.itemPurchase[indexPath.row].price)) /kg"
 //        String(self.itemPurchase[indexPath.row].price)
 //        cell.countItemLabel.text = "1"
@@ -179,19 +191,31 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete
         {
             self.itemPurchase.remove(at: indexPath.row)
+            print(self.itemPurchase.count)
+            self.idxCollectionViewCell.remove(at: indexPath.row)
             
-            itemTableView.reloadData()
+            
         }
+        itemTableView.reloadData()
+        updateTotalPrice()
     }
+    
     
 }
 
 extension ViewController: ItemCountDelegate {
     func getItemCount(count: Int, name: String) {
-        
-        self.itemPurchase.first(where: {$0.name == name })?.itemCount = count
-//        filterdObject[0]
+        if count == 0 {
+            let idx = self.itemPurchase.firstIndex{$0.name == name}!
+            self.idxCollectionViewCell.remove(at: idx)
+            self.itemPurchase.removeAll(where: {$0.name == name })
+            print(self.idxCollectionViewCell)
+        }
+        else {
+            self.itemPurchase.first(where: {$0.name == name })?.itemCount = count
+        }
         print("\(name) \(count)")
+        self.itemTableView.reloadData()
         updateTotalPrice()
         
 

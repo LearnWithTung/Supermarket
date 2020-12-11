@@ -19,12 +19,16 @@ class ItemTableViewCell: UITableViewCell {
     @IBOutlet weak var priceItemLabel: UILabel!
     @IBOutlet weak var countItemLabel: UILabel!
     
+    @IBOutlet weak var minusButton: UIButton!
     var delegate: ItemCountDelegate!
     
     static let identifier = "ItemTableViewCell"
     var countItem: Int = 1
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.minusButton.layer.borderWidth = 1.0
+        self.minusButton.layer.cornerRadius = 3
+        self.minusButton.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.8745098039, blue: 0.3176470588, alpha: 1)
         self.imgItem.layer.cornerRadius = 9
         self.imgItem.backgroundColor = #colorLiteral(red: 0.8745098039, green: 0.8745098039, blue: 0.8745098039, alpha: 1)
         self.countItemLabel.text = "\(countItem)"

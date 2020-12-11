@@ -16,11 +16,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="344" height="112"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="K3y-w8-SCo">
-                        <rect key="frame" x="246" y="46" width="60" height="20"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K3y-w8-SCo">
+                        <rect key="frame" x="236" y="46" width="70" height="20"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TJm-HA-y6D">
                                 <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="4Kk-AW-XqH"/>
+                                    <constraint firstAttribute="width" secondItem="TJm-HA-y6D" secondAttribute="height" multiplier="1:1" id="ilQ-1U-bm3"/>
+                                </constraints>
                                 <state key="normal" title="-">
                                     <color key="titleColor" red="0.10196078431372549" green="0.87450980392156863" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -29,14 +33,17 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sZy-Rw-sf7">
-                                <rect key="frame" x="20" y="0.0" width="20" height="20"/>
+                                <rect key="frame" x="20" y="0.0" width="30" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.60392156862745094" green="0.60392156862745094" blue="0.60392156862745094" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yB2-rW-fPQ">
-                                <rect key="frame" x="40" y="0.0" width="20" height="20"/>
+                                <rect key="frame" x="50" y="0.0" width="20" height="20"/>
                                 <color key="backgroundColor" red="0.10196078431372549" green="0.87450980392156863" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="yB2-rW-fPQ" secondAttribute="height" multiplier="1:1" id="TDa-Ef-6im"/>
+                                </constraints>
                                 <state key="normal" title="+">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -52,7 +59,9 @@
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="EgS-Ff-LVL"/>
-                            <constraint firstAttribute="width" constant="60" id="u72-Jz-hOM"/>
+                            <constraint firstItem="yB2-rW-fPQ" firstAttribute="width" secondItem="TJm-HA-y6D" secondAttribute="width" id="JSi-R9-VhB"/>
+                            <constraint firstItem="sZy-Rw-sf7" firstAttribute="width" secondItem="TJm-HA-y6D" secondAttribute="width" multiplier="3/2" id="tyW-in-X4Z"/>
+                            <constraint firstAttribute="width" constant="70" id="u72-Jz-hOM"/>
                         </constraints>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FyS-Zr-Qrh">
@@ -99,6 +108,7 @@
             <connections>
                 <outlet property="countItemLabel" destination="sZy-Rw-sf7" id="ISC-r1-50g"/>
                 <outlet property="imgItem" destination="kak-a2-dfL" id="CPW-XQ-UPP"/>
+                <outlet property="minusButton" destination="TJm-HA-y6D" id="CZ1-5n-fUu"/>
                 <outlet property="nameItemLabel" destination="a93-mk-6UH" id="wcT-dX-5YF"/>
                 <outlet property="priceItemLabel" destination="u2Y-iB-Kap" id="UiI-j6-fce"/>
             </connections>
