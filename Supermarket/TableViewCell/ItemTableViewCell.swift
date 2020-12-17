@@ -14,6 +14,7 @@ protocol ItemCountDelegate {
     
     func increaseItem(_ foodItem: FoodItem)
     
+
 }
 
 class ItemTableViewCell: UITableViewCell {
@@ -25,7 +26,7 @@ class ItemTableViewCell: UITableViewCell {
     @IBOutlet weak var countItemLabel: UILabel!
     
     @IBOutlet weak var minusButton: UIButton!
-    var delegate: ItemCountDelegate!
+    var delegate: ItemCountDelegate?
     
     var foodItem: FoodItem!
     
@@ -52,12 +53,20 @@ class ItemTableViewCell: UITableViewCell {
         return UINib(nibName: identifier, bundle: nil)
     }
     
+    public func configureCell(_ foodItem: FoodItem) {
+        imgItem.image = foodItem.food.image
+        nameItemLabel.text = foodItem.food.name
+        priceItemLabel.text = String(foodItem.food.price)
+        countItemLabel.text = String(foodItem.count)
+        self.foodItem = foodItem
+    }
+    
     
     @IBAction func addItemPressed(_ sender: Any) {
 //        countItem = countItem + 1
 //        self.countItemLabel.text = "\(countItem)"
 //        delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
-        delegate.increaseItem(foodItem)
+        delegate?.increaseItem(foodItem)
 
 
     }
@@ -68,11 +77,7 @@ class ItemTableViewCell: UITableViewCell {
 //            self.countItemLabel.text = "\(countItem)"
 //            delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
 //        }
-        delegate.decreaseItem(foodItem)
-
-    
-
-
+        delegate?.decreaseItem(foodItem)
     }
     
     

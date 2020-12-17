@@ -25,9 +25,7 @@ class ViewController: UIViewController {
     
     
     @IBOutlet weak var itemCollectionView: UICollectionView!
-    
     @IBOutlet weak var itemTableView: UITableView!
-    
     @IBOutlet weak var totalPriceLabel: UILabel!
     @IBOutlet weak var emptyLabel: UILabel!
     
@@ -43,11 +41,9 @@ class ViewController: UIViewController {
         Food(image: #imageLiteral(resourceName: "biscuit 1"), price: 21000, name: "Biscuit")
     ]
     
-    var itemPurchase: [FoodItem] = []
+    var itemPurchase = [FoodItem]()
 
     var idxCollectionViewCell: [Int] = []
-    
-    var totalPrice: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,11 +66,11 @@ class ViewController: UIViewController {
     }
     
     func updateTotalPrice() {
-        totalPrice = 0
+        var totalPrice = 0
         for item in itemPurchase {
             totalPrice += item.food.price * item.count
         }
-        self.totalPriceLabel.text = vndFormatCurrency(totalPrice)
+        self.totalPriceLabel.text = formatCurrency(totalPrice)
     }
     
 
@@ -88,12 +84,12 @@ class ViewController: UIViewController {
         updateTotalPrice()
     }
     
-    func vndFormatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
+    func formatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.currencyGroupingSeparator = "."
         currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencySymbol = "VND"
+        currencyFormatter.currencySymbol = symbol
         currencyFormatter.positiveFormat = "#,##0 ¤"
         let priceString = currencyFormatter.string(from: NSNumber(value: inputNumber))!
         return priceString
@@ -108,13 +104,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        print(indexPath.item)
         self.emptyLabel.isHidden = true
         self.itemTableView.isHidden = false
         
-        let selectedFood = itemArray[indexPath.row]
+        let selectedFood = itemArray[indexPath.item]
         addItem(selectedFood, indexPath.item)
        
         updateTotalPrice()
@@ -126,9 +123,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
         if !self.idxCollectionViewCell.contains(indexCollectionView) {
             self.idxCollectionViewCell.append(indexCollectionView)
             self.itemPurchase.append(FoodItem(food: food))
+
             self.itemTableView.reloadData()
-//            updateTotalPrice()
-//            print(self.idxCollectionViewCell)
+            //            updateTotalPrice()
+            //            print(self.idxCollectionViewCell)
         } else {
             if let idx = self.idxCollectionViewCell.firstIndex(of: indexCollectionView){
                 let indexPath = IndexPath(row: idx, section: 0)
@@ -139,9 +137,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
                 self.itemTableView.reloadData()
             }
         }
-
-        
-        
     }
     
     
@@ -170,44 +165,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ItemTableViewCell.identifier, for: indexPath) as! ItemTableViewCell
         cell.delegate = self
-        cell.imgItem.image = self.itemPurchase[indexPath.row].food.image
-        cell.nameItemLabel.text = self.itemPurchase[indexPath.row].food.name
-        let money = vndFormatCurrency(self.itemPurchase[indexPath.row].food.price)
-        let end = money.index(money.endIndex, offsetBy: -3)
-        let result = money[..<end]
-        cell.priceItemLabel.text = "\(result)/kg"
-        cell.countItemLabel.text = "\(self.itemPurchase[indexPath.row].count)"
-//        cell.countItem = self.itemPurchase[indexPath.row].itemCount!
+        cell.configureCell(itemPurchase[indexPath.row])
 
-        
-        updateTotalPrice()
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
-    {
-        if editingStyle == .delete
-        {
-            self.itemPurchase.remove(at: indexPath.row)
-            print(self.itemPurchase.count)
-            self.idxCollectionViewCell.remove(at: indexPath.row)
-            
-            
-        }
-        itemTableView.reloadData()
-        updateTotalPrice()
-    }
-    
-    
 }
 
 extension ViewController: ItemCountDelegate {
  
     func decreaseItem(_ foodItem: FoodItem) {
-        foodItem.count -= 1
+        foodItem.count = foodItem.count - 1
         updateListFoodItem()
         
         
@@ -224,30 +195,12 @@ extension ViewController: ItemCountDelegate {
             if item.count == 0 {
                 self.itemPurchase.removeAll(where: {$0.food.name == item.food.name })
             }
-                
+
         }
         self.itemTableView.reloadData()
         updateTotalPrice()
     }
     
-
-    
-//    func getItemCount(count: Int, name: String) {
-//        if count == 0 {
-//            let idx = self.itemPurchase.firstIndex{$0.name == name}!
-//            self.idxCollectionViewCell.remove(at: idx)
-//            self.itemPurchase.removeAll(where: {$0.name == name })
-//            print(self.idxCollectionViewCell)
-//        }
-//        else {
-//            self.itemPurchase.first(where: {$0.name == name })?.itemCount = count
-//        }
-//        print("\(name) \(count)")
-//        self.itemTableView.reloadData()
-//        updateTotalPrice()
-//    }
-    
-
     
     
 }

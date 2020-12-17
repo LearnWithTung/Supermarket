@@ -83,12 +83,26 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35.000 /kg" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u2Y-iB-Kap">
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="irS-7O-rQH">
                                         <rect key="frame" x="0.0" y="32.5" width="87.5" height="32.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10.000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a1h-7q-ra9">
+                                                <rect key="frame" x="0.0" y="0.0" width="51.5" height="32.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <color key="textColor" red="0.10196078431372549" green="0.87450980392156863" blue="0.31764705882352939" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/ kg" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbd-0E-sRK">
+                                                <rect key="frame" x="51.5" y="0.0" width="36" height="32.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <color key="textColor" red="0.82745098039215681" green="0.82745098039215681" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="lbd-0E-sRK" firstAttribute="width" secondItem="a1h-7q-ra9" secondAttribute="width" multiplier="0.7" id="1cA-Sj-PX4"/>
+                                        </constraints>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -110,7 +124,7 @@
                 <outlet property="imgItem" destination="kak-a2-dfL" id="CPW-XQ-UPP"/>
                 <outlet property="minusButton" destination="TJm-HA-y6D" id="CZ1-5n-fUu"/>
                 <outlet property="nameItemLabel" destination="a93-mk-6UH" id="wcT-dX-5YF"/>
-                <outlet property="priceItemLabel" destination="u2Y-iB-Kap" id="UiI-j6-fce"/>
+                <outlet property="priceItemLabel" destination="a1h-7q-ra9" id="BwU-sW-h5T"/>
             </connections>
             <point key="canvasLocation" x="216" y="-61"/>
         </tableViewCell>
