@@ -7,16 +7,17 @@
 
 import UIKit
 
-class Item {
+struct Food {
     let image: UIImage
     let price: Int
     let name: String
-    var itemCount: Int?
-    init(image: UIImage, price: Int, name: String, itemCount: Int?) {
-        self.image = image
-        self.price = price
-        self.name = name
-        self.itemCount = itemCount
+}
+
+class FoodItem {
+    let food: Food
+    var count: Int = 1
+    init(food: Food) {
+        self.food = food
     }
 }
 
@@ -30,20 +31,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var totalPriceLabel: UILabel!
     @IBOutlet weak var emptyLabel: UILabel!
     
-    var itemArray: [Item] = [
-        Item(image: #imageLiteral(resourceName: "apple-1 1"), price: 35000, name: "Apple", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "broccoli 1"), price: 15000, name: "Broccoli", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "banana 1"), price: 15000, name: "Banana", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "bread 1"), price: 12000, name: "Bread", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "aubergine 1"), price: 17000, name: "Aubergine", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "blueberries 1"), price: 65000, name: "Bluberries", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "cabbage 1"), price: 10000, name: "Cabbage", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "beans 1"), price: 10000, name: "Beans", itemCount: 1),
-        Item(image: #imageLiteral(resourceName: "biscuit 1"), price: 21000, name: "Biscuit", itemCount: 1)
+    var itemArray: [Food] = [
+        Food(image: #imageLiteral(resourceName: "apple-1 1"), price: 35000, name: "Apple"),
+        Food(image: #imageLiteral(resourceName: "broccoli 1"), price: 15000, name: "Broccoli"),
+        Food(image: #imageLiteral(resourceName: "banana 1"), price: 15000, name: "Banana"),
+        Food(image: #imageLiteral(resourceName: "bread 1"), price: 12000, name: "Bread"),
+        Food(image: #imageLiteral(resourceName: "aubergine 1"), price: 17000, name: "Aubergine"),
+        Food(image: #imageLiteral(resourceName: "blueberries 1"), price: 65000, name: "Bluberries"),
+        Food(image: #imageLiteral(resourceName: "cabbage 1"), price: 10000, name: "Cabbage"),
+        Food(image: #imageLiteral(resourceName: "beans 1"), price: 10000, name: "Beans"),
+        Food(image: #imageLiteral(resourceName: "biscuit 1"), price: 21000, name: "Biscuit")
     ]
     
-    let imageItemArray: [UIImage] = [#imageLiteral(resourceName: "cabbage 1"), #imageLiteral(resourceName: "banana 1"), #imageLiteral(resourceName: "apple-1 1"), #imageLiteral(resourceName: "aubergine 1"), #imageLiteral(resourceName: "bread 1"), #imageLiteral(resourceName: "biscuit 1"), #imageLiteral(resourceName: "blueberries 1"), #imageLiteral(resourceName: "beans 1"), #imageLiteral(resourceName: "broccoli 1")]
-    var itemPurchase: [Item] = []
+    var itemPurchase: [FoodItem] = []
 
     var idxCollectionViewCell: [Int] = []
     
@@ -72,13 +72,7 @@ class ViewController: UIViewController {
     func updateTotalPrice() {
         totalPrice = 0
         for item in itemPurchase {
-            if let itemCount = item.itemCount {
-                totalPrice = totalPrice + item.price * itemCount
-            }
-            else {
-                totalPrice = totalPrice + item.price * 1
-            }
-            
+            totalPrice += item.food.price * item.count
         }
         self.totalPriceLabel.text = vndFormatCurrency(totalPrice)
     }
@@ -119,26 +113,37 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
 //        print(indexPath.item)
         self.emptyLabel.isHidden = true
         self.itemTableView.isHidden = false
-        if !self.idxCollectionViewCell.contains(indexPath.item) {
-            self.idxCollectionViewCell.append(indexPath.item)
-            self.itemPurchase.append(itemArray[indexPath.item])
-            self.itemTableView.reloadData()
-//            updateTotalPrice()
-//            print(self.idxCollectionViewCell)
-        } else {
-            if let idx = self.idxCollectionViewCell.firstIndex(of: indexPath.item){
-                let indexPath = IndexPath(row: idx, section: 0)
-                let cell = itemTableView.cellForRow(at: indexPath) as! ItemTableViewCell
-                self.itemPurchase[idx].itemCount! += 1
-                cell.countItem = self.itemPurchase[idx].itemCount!
-                cell.countItemLabel.text = "\(self.itemPurchase[idx].itemCount!)"
-                self.itemTableView.reloadData()
-            }
-        }
+        
+        let selectedFood = itemArray[indexPath.row]
+        addItem(selectedFood, indexPath.item)
+       
         updateTotalPrice()
 
 
     }
+    
+    func addItem(_ food: Food, _ indexCollectionView: Int) {
+        if !self.idxCollectionViewCell.contains(indexCollectionView) {
+            self.idxCollectionViewCell.append(indexCollectionView)
+            self.itemPurchase.append(FoodItem(food: food))
+            self.itemTableView.reloadData()
+//            updateTotalPrice()
+//            print(self.idxCollectionViewCell)
+        } else {
+            if let idx = self.idxCollectionViewCell.firstIndex(of: indexCollectionView){
+                let indexPath = IndexPath(row: idx, section: 0)
+                let cell = itemTableView.cellForRow(at: indexPath) as! ItemTableViewCell
+                self.itemPurchase[idx].count += 1
+//                cell.countItem = self.itemPurchase[idx].itemCount!
+//                cell.countItemLabel.text = "\(self.itemPurchase[idx].itemCount!)"
+                self.itemTableView.reloadData()
+            }
+        }
+
+        
+        
+    }
+    
     
 }
 
@@ -165,20 +170,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: ItemTableViewCell.identifier, for: indexPath) as! ItemTableViewCell
         cell.delegate = self
-        cell.imgItem.image = self.itemPurchase[indexPath.row].image
-        cell.nameItemLabel.text = self.itemPurchase[indexPath.row].name
-        let money = vndFormatCurrency(self.itemPurchase[indexPath.row].price)
+        cell.imgItem.image = self.itemPurchase[indexPath.row].food.image
+        cell.nameItemLabel.text = self.itemPurchase[indexPath.row].food.name
+        let money = vndFormatCurrency(self.itemPurchase[indexPath.row].food.price)
         let end = money.index(money.endIndex, offsetBy: -3)
         let result = money[..<end]
         cell.priceItemLabel.text = "\(result)/kg"
-        cell.countItemLabel.text = "\(self.itemPurchase[indexPath.row].itemCount!)"
-        cell.countItem = self.itemPurchase[indexPath.row].itemCount!
-//        cell.priceItemLabel.text = "\(vndFormatCurrency(self.itemPurchase[indexPath.row].price)) /kg"
-//        String(self.itemPurchase[indexPath.row].price)
-//        cell.countItemLabel.text = "1"
-//        self.itemPurchase[indexPath.row].itemCount = cell.countItem
-//        print(cell.countItem)
-//        print(cell.countItemLabel.text)
+        cell.countItemLabel.text = "\(self.itemPurchase[indexPath.row].count)"
+//        cell.countItem = self.itemPurchase[indexPath.row].itemCount!
+
+        
         updateTotalPrice()
         return cell
     }
@@ -204,22 +205,47 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension ViewController: ItemCountDelegate {
-    func getItemCount(count: Int, name: String) {
-        if count == 0 {
-            let idx = self.itemPurchase.firstIndex{$0.name == name}!
-            self.idxCollectionViewCell.remove(at: idx)
-            self.itemPurchase.removeAll(where: {$0.name == name })
-            print(self.idxCollectionViewCell)
+ 
+    func decreaseItem(_ foodItem: FoodItem) {
+        foodItem.count -= 1
+        updateListFoodItem()
+        
+        
+    }
+    
+    func increaseItem(_ foodItem: FoodItem) {
+        foodItem.count = foodItem.count + 1
+        updateListFoodItem()
+        
+    }
+    
+    private func updateListFoodItem() {
+        for item in itemPurchase {
+            if item.count == 0 {
+                self.itemPurchase.removeAll(where: {$0.food.name == item.food.name })
+            }
+                
         }
-        else {
-            self.itemPurchase.first(where: {$0.name == name })?.itemCount = count
-        }
-        print("\(name) \(count)")
         self.itemTableView.reloadData()
         updateTotalPrice()
-        
-
     }
+    
+
+    
+//    func getItemCount(count: Int, name: String) {
+//        if count == 0 {
+//            let idx = self.itemPurchase.firstIndex{$0.name == name}!
+//            self.idxCollectionViewCell.remove(at: idx)
+//            self.itemPurchase.removeAll(where: {$0.name == name })
+//            print(self.idxCollectionViewCell)
+//        }
+//        else {
+//            self.itemPurchase.first(where: {$0.name == name })?.itemCount = count
+//        }
+//        print("\(name) \(count)")
+//        self.itemTableView.reloadData()
+//        updateTotalPrice()
+//    }
     
 
     

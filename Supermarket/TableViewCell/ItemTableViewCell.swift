@@ -8,7 +8,12 @@
 import UIKit
 
 protocol ItemCountDelegate {
-    func getItemCount(count: Int, name: String)
+//    func getItemCount(count: Int, name: String)
+    
+    func decreaseItem(_ foodItem: FoodItem)
+    
+    func increaseItem(_ foodItem: FoodItem)
+    
 }
 
 class ItemTableViewCell: UITableViewCell {
@@ -22,6 +27,8 @@ class ItemTableViewCell: UITableViewCell {
     @IBOutlet weak var minusButton: UIButton!
     var delegate: ItemCountDelegate!
     
+    var foodItem: FoodItem!
+    
     static let identifier = "ItemTableViewCell"
     var countItem: Int = 1
     override func awakeFromNib() {
@@ -31,7 +38,7 @@ class ItemTableViewCell: UITableViewCell {
         self.minusButton.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.8745098039, blue: 0.3176470588, alpha: 1)
         self.imgItem.layer.cornerRadius = 9
         self.imgItem.backgroundColor = #colorLiteral(red: 0.8745098039, green: 0.8745098039, blue: 0.8745098039, alpha: 1)
-        self.countItemLabel.text = "\(countItem)"
+//        self.countItemLabel.text = "\(countItem)"
         
         // Initialization code
     }
@@ -47,20 +54,21 @@ class ItemTableViewCell: UITableViewCell {
     
     
     @IBAction func addItemPressed(_ sender: Any) {
-        countItem = countItem + 1
-        self.countItemLabel.text = "\(countItem)"
-        delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
-//        let indexP = NSIndexPath(item: countItemLabel.tag, section: 0)
-//        print(indexP)
+//        countItem = countItem + 1
+//        self.countItemLabel.text = "\(countItem)"
+//        delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
+        delegate.increaseItem(foodItem)
+
 
     }
     
     @IBAction func rmvItemPressed(_ sender: Any) {
-        if countItem > 0 {
-            countItem = countItem - 1
-            self.countItemLabel.text = "\(countItem)"
-            delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
-        }
+//        if countItem > 0 {
+//            countItem = countItem - 1
+//            self.countItemLabel.text = "\(countItem)"
+//            delegate.getItemCount(count: countItem, name: nameItemLabel.text!)
+//        }
+        delegate.decreaseItem(foodItem)
 
     
 
