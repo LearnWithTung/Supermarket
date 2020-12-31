@@ -30,8 +30,8 @@ class HistoryViewController: UIViewController {
             self.sections = invoiceArray
             self.sections = self.sections.sorted { $0.datetime > $1.datetime}
 
-            DispatchQueue.main.async {
-                self.historyTableView.reloadData()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) { [weak self] in
+                self?.historyTableView.reloadData()
             }
         }
 
@@ -93,7 +93,7 @@ class HistoryViewController: UIViewController {
                     }
                     let date = NSDate(timeIntervalSince1970: timestamp)
                     let dayTimePeriodFormatter = DateFormatter()
-                    dayTimePeriodFormatter.dateFormat = "MMM dd yyyy hh:mm a"
+                    dayTimePeriodFormatter.dateFormat = "MMM dd yyyy HH:mm:ss" //MMM dd yyyy hh:mm a
                     let dateString = dayTimePeriodFormatter.string(from: date as Date)
                     
 //                    self.arrDate.append(document.data()["timestamp"] as! String)//document.documentID)
