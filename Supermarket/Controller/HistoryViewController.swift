@@ -41,7 +41,6 @@ class HistoryViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.sections = []
         super.viewWillAppear(animated)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
 
