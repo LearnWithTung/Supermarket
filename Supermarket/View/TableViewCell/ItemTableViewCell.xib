@@ -120,6 +120,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="addButton" destination="yB2-rW-fPQ" id="ud0-tc-YkK"/>
                 <outlet property="countItemLabel" destination="sZy-Rw-sf7" id="ISC-r1-50g"/>
                 <outlet property="imgItem" destination="kak-a2-dfL" id="CPW-XQ-UPP"/>
                 <outlet property="minusButton" destination="TJm-HA-y6D" id="CZ1-5n-fUu"/>

@@ -6,22 +6,13 @@
 //
 
 import UIKit
+import Firebase
 
-struct Food {
-    let image: UIImage
-    let price: Int
-    let name: String
-}
 
-class FoodItem {
-    let food: Food
-    var count: Int = 1
-    init(food: Food) {
-        self.food = food
-    }
-}
 
-class ViewController: UIViewController {
+
+
+class HomeViewController: UIViewController {
     
     
     @IBOutlet weak var itemCollectionView: UICollectionView!
@@ -52,8 +43,6 @@ class ViewController: UIViewController {
         itemTableView.delegate = self
         itemTableView.dataSource = self
 
-//        itemCollectionView.register(UINib(nibName: "itemCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "itemCollectionViewCell")
-//        itemCollectionView.register(firstCollectionViewCell.nib(), forCellWithReuseIdentifier: "firstCollectionViewCell")
         itemCollectionView.delegate = self
         itemCollectionView.dataSource = self
         if itemPurchase.count == 0 {
@@ -63,6 +52,22 @@ class ViewController: UIViewController {
         
         updateTotalPrice()
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.navigationItem.hidesBackButton = true
+//        let newBackButton = UIBarButtonItem(image: nil, style: UIBarButtonItem.Style.plain, target: self, action: #selector(clearAllItems))
+        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "Clear", style: UIBarButtonItem.Style.plain, target: self, action: #selector(clearAllItems))
+    }
+    
+    @objc func clearAllItems(){
+        self.idxCollectionViewCell.removeAll()
+        self.itemPurchase.removeAll()
+        self.itemTableView.reloadData()
+        self.emptyLabel.isHidden = false
+        self.itemTableView.isHidden = true
+        updateTotalPrice()
     }
     
     func updateTotalPrice() {
@@ -83,6 +88,24 @@ class ViewController: UIViewController {
         self.itemTableView.isHidden = true
         updateTotalPrice()
     }
+    @IBAction func payoutButton(_ sender: Any) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+//        nzLwtU5rCiSjPGftXyGCZDbUarF3
+        let db = Firestore.firestore()
+        let timePurchase = Date().timeIntervalSince1970
+        let documentID = db.collection(uid).document()
+        print(documentID.documentID)
+        db.collection(uid).document(documentID.documentID).setData([
+            "timestamp": timePurchase
+        ])
+        for item in self.itemPurchase {
+            db.collection(uid).document(documentID.documentID).collection("items").addDocument(data: ["name": item.food.name,  "count":item.count, "price":item.food.price])
+//            db.collection("nzLwtU5rCiSjPGftXyGCZDbUarF3").document("\(timePurchase)").collection("items").addDocument(data: ["name": item.food.name,  "count":item.count, "price":item.food.price])
+        }
+        print("Success!!!")
+    }
     
     func formatCurrency(_ inputNumber: Int, symbol: String = "VND") -> String {
         let currencyFormatter = NumberFormatter()
@@ -97,7 +120,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 60, height: 60)
     }
@@ -122,7 +145,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
     func addItem(_ food: Food, _ indexCollectionView: Int) {
         if !self.idxCollectionViewCell.contains(indexCollectionView) {
             self.idxCollectionViewCell.append(indexCollectionView)
-            self.itemPurchase.append(FoodItem(food: food))
+            self.itemPurchase.append(FoodItem(food: food,count: 1))
 
             self.itemTableView.reloadData()
             //            updateTotalPrice()
@@ -142,7 +165,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlow
     
 }
 
-extension ViewController: UICollectionViewDataSource {
+extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return itemArray.count
     }
@@ -156,7 +179,7 @@ extension ViewController: UICollectionViewDataSource {
     
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.itemPurchase.count
     }
@@ -175,7 +198,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-extension ViewController: ItemCountDelegate {
+extension HomeViewController: ItemCountDelegate {
  
     func decreaseItem(_ foodItem: FoodItem) {
         foodItem.count = foodItem.count - 1

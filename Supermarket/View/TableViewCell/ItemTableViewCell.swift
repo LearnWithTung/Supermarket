@@ -26,6 +26,7 @@ class ItemTableViewCell: UITableViewCell {
     @IBOutlet weak var countItemLabel: UILabel!
     
     @IBOutlet weak var minusButton: UIButton!
+    @IBOutlet weak var addButton: UIButton!
     var delegate: ItemCountDelegate?
     
     var foodItem: FoodItem!
